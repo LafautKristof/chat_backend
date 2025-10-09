@@ -68,8 +68,13 @@ export async function setPassword({ email, password }: SetPasswordData) {
 }
 
 export async function getUserByEmail(email: string) {
-    const user = await prisma.user.findUnique({
-        where: { email },
-    });
-    return user;
+    try {
+        console.log("🔍 Prisma getUserByEmail:", email);
+        const user = await prisma.user.findUnique({ where: { email } });
+        console.log("✅ User fetched:", user);
+        return user;
+    } catch (err: any) {
+        console.error("❌ Prisma error in getUserByEmail:", err.message, err);
+        throw err; // laat de bovenliggende catch dit afhandelen
+    }
 }
