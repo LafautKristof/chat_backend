@@ -19,8 +19,12 @@ app.use(express.json());
 
 app.use(
     cors({
-        origin: ["https://jouw-frontend.vercel.app", "http://localhost:3000"],
+        origin: [
+            "https://chat-frontend-6ja0kmfzu-kristoflafauts-projects.vercel.app",
+            "http://localhost:3000",
+        ],
         credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE"],
     })
 );
 
