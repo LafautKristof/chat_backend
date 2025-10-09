@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(
     cors({
         origin: [
-            "https://chat-frontend-6ja0kmfzu-kristoflafauts-projects.vercel.app",
+            "https://chat-frontend-one-steel.vercel.app",
             "http://localhost:3000",
         ],
         credentials: true,
