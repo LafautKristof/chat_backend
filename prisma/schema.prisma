@@ -8,73 +8,60 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String?   @unique
+  id            String                    @id @default(uuid())
+  email         String?                   @unique
   name          String?
-  image         String?   
-  password      String?   
-
+  image         String?
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  password      String?
   accounts      Account[]
-
   conversations ConversationParticipant[]
   messages      Message[]
-
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
 }
 
 model Account {
-  id                String   @id @default(uuid())
-  provider          String   
-  providerAccountId String   
-
-  type              String?  // bv. "oauth"
+  id                String  @id @default(uuid())
+  provider          String
+  providerAccountId String
+  type              String?
   access_token      String?
   refresh_token     String?
   expires_at        Int?
-
-  userId String
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
 model Message {
-  id        String   @id @default(uuid())
-  content   String
-  type      String   @default("text")
-
-  sender   User? @relation(fields: [senderId], references: [id])
-  senderId String?
-
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  id             String       @id @default(uuid())
+  content        String
+  createdAt      DateTime     @default(now())
+  senderId       String?
   conversationId String
-  
-  createdAt DateTime @default(now())
+  type           String       @default("text")
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  sender         User?        @relation(fields: [senderId], references: [id])
 }
 
 model Conversation {
-  id            String   @id @default(uuid())
-  title         String?
-  background    String?
-  isGroup       Boolean  @default(false)
-  
-  participants  ConversationParticipant[]
-  messages      Message[]
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  id           String                    @id @default(uuid())
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  isGroup      Boolean                   @default(false)
+  title        String?
+  background   String?
+  participants ConversationParticipant[]
+  messages     Message[]
 }
 
 model ConversationParticipant {
-  id              String @id @default(uuid())
-  user            User         @relation(fields: [userId], references: [id])
-  userId          String
-  
-  conversation    Conversation @relation(fields: [conversationId], references: [id])
-  conversationId  String
-
+  id             String       @id @default(uuid())
+  userId         String
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
 
   @@unique([userId, conversationId])
 }
