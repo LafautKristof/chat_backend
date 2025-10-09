@@ -6,6 +6,7 @@ import type {
     RegisterData,
     SetPasswordData,
 } from "../types/authTypes";
+console.log("🔍 DATABASE_URL =", process.env.DATABASE_URL);
 export async function register({ email, name, password }: RegisterData) {
     const existingUser = await prisma.user.findFirst({
         where: { OR: [{ email }, { name }] },
