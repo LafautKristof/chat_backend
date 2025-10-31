@@ -67,7 +67,6 @@ export async function getConversationById(req: Request, res: Response) {
 }
 
 export async function checkConversationIfExcist(req: Request, res: Response) {
-    console.log("conversationcontroller");
     const { userA, userB } = req.query;
     if (!userA || !userB) {
         return res.status(400).json({ message: "Missing UserIds" });

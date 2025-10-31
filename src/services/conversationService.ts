@@ -94,7 +94,6 @@ export async function getConversationById(conversationId: string) {
 }
 
 export async function checkConversationIfExcist(userA: string, userB: string) {
-    console.log("conversationservice");
     const conversation = await prisma.conversation.findFirst({
         where: {
             isGroup: false,

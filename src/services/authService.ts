@@ -6,7 +6,7 @@ import type {
     RegisterData,
     SetPasswordData,
 } from "../types/authTypes";
-console.log("🔍 DATABASE_URL =", process.env.DATABASE_URL);
+
 export async function register({ email, name, password }: RegisterData) {
     const existingUser = await prisma.user.findFirst({
         where: { OR: [{ email }, { name }] },
@@ -70,9 +70,8 @@ export async function setPassword({ email, password }: SetPasswordData) {
 
 export async function getUserByEmail(email: string) {
     try {
-        console.log("🔍 Prisma getUserByEmail:", email);
         const user = await prisma.user.findUnique({ where: { email } });
-        console.log("✅ User fetched:", user);
+
         return user;
     } catch (err: any) {
         console.error("❌ Prisma error in getUserByEmail:", err.message, err);
