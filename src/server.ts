@@ -16,7 +16,34 @@ export const io = new Server(httpServer, {
 });
 
 app.use(express.json());
+const SUPABASE_URL = process.env.SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY!;
+const INTERVAL_MINUTES = 30;
 
+async function pingSupabase() {
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/?select=1`, {
+            headers: {
+                apikey: SUPABASE_ANON_KEY,
+                Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+        });
+
+        if (res.ok)
+            console.log(
+                `✅ Supabase responded OK at ${new Date().toLocaleTimeString()}`
+            );
+        else
+            console.warn(
+                `⚠️ Supabase returned ${res.status} ${res.statusText}`
+            );
+    } catch (err) {
+        console.error("❌ Error pinging Supabase:", (err as Error).message);
+    }
+}
+
+setInterval(pingSupabase, INTERVAL_MINUTES * 60 * 1000);
+pingSupabase(); // direct bij start
 app.use(
     cors({
         origin: [
