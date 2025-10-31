@@ -43,7 +43,7 @@ async function pingSupabase() {
 }
 
 setInterval(pingSupabase, INTERVAL_MINUTES * 60 * 1000);
-pingSupabase(); // direct bij start
+pingSupabase();
 app.use(
     cors({
         origin: [
