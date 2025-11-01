@@ -1,8 +1,4 @@
----
-
-## ⚙️ **Backend — `README.md` (Express + Socket.IO)**
-
-```markdown
+````markdown
 # 🧠 Chat App Backend (Express + Socket.IO)
 
 A lightweight **Node.js + Express** backend that provides REST endpoints and real-time communication using **Socket.IO**.  
@@ -41,3 +37,4 @@ git clone https://github.com/LafautKristof/chat_backend.git
 cd chat_backend
 npm install
 ```
+````

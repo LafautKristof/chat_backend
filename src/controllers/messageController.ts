@@ -11,15 +11,14 @@ export async function sendMessage(req: Request, res: Response) {
             recipientId,
             conversationId,
             content,
-            type, // 👈 toegevoegd
+            type,
         });
 
-        // 🟢 Zend bericht realtime naar alle sockets in de juiste room
         io.to(message.conversationId).emit("message", {
             ...message,
             conversationId: message.conversationId,
         });
-        // 🟢 extra event voor ConversationList (iedereen mag deze zien)
+
         io.emit("conversation_update", {
             conversationId: message.conversationId,
             content: message.content,
@@ -27,7 +26,6 @@ export async function sendMessage(req: Request, res: Response) {
             participants: message.conversation.participants,
         });
 
-        // Stuur het bericht ook terug naar de afzender via HTTP response
         res.json(message);
     } catch (error) {
         console.error(error);

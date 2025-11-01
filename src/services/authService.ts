@@ -75,6 +75,6 @@ export async function getUserByEmail(email: string) {
         return user;
     } catch (err: any) {
         console.error("❌ Prisma error in getUserByEmail:", err.message, err);
-        throw err; // laat de bovenliggende catch dit afhandelen
+        throw err;
     }
 }

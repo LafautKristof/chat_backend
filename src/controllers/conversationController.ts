@@ -25,7 +25,6 @@ export async function inviteUser(req: Request, res: Response) {
                 userId
             );
 
-        // realtime broadcast naar iedereen in de room
         io.to(conversationId).emit("user_added", {
             conversationId,
             user: {
@@ -46,8 +45,8 @@ export async function inviteUser(req: Request, res: Response) {
             totalParticipants,
             isGroup,
         });
-    } catch (error: any) {
-        res.status(400).json({ error: error.message });
+    } catch (error) {
+        res.status(400).json({ error: "Failed to invite user" });
     }
 }
 
@@ -57,12 +56,12 @@ export async function getConversationById(req: Request, res: Response) {
             req.params.id
         );
         if (!conversation) {
-            return res.status(400).json({ error: "conversation not found" });
+            return res.status(400).json({ error: "Conversation not found" });
         }
         res.json(conversation);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: " Failed to loadConversation" });
+        res.status(500).json({ error: "Failed to loadConversation" });
     }
 }
 
@@ -113,7 +112,6 @@ export async function leaveConversation(req: Request, res: Response) {
             userId
         );
 
-        // realtime broadcast
         io.to(conversationId).emit("user_left", {
             conversationId,
             userId,
@@ -121,7 +119,7 @@ export async function leaveConversation(req: Request, res: Response) {
 
         res.json(result);
     } catch (error: any) {
-        console.error("❌ leaveConversation error:", error);
+        console.error("❌ LeaveConversation error:", error);
         res.status(400).json({ error: error.message });
     }
 }

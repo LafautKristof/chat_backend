@@ -67,7 +67,6 @@ app.use("/messages", messageRouter);
 io.on("connection", (socket) => {
     console.log("🟢 User connected:", socket.id);
 
-    // 🔹 Join/leave rooms
     socket.on("join_conversation", (conversationId) => {
         socket.join(conversationId);
         console.log(`➡️ User joined room ${conversationId}`);
@@ -78,7 +77,6 @@ io.on("connection", (socket) => {
         console.log(`⬅️ User left room ${conversationId}`);
     });
 
-    // ✏️ Typing events
     socket.on("typing", (data) => {
         socket.broadcast.to(data.conversationId).emit("typing", data);
     });
@@ -87,28 +85,23 @@ io.on("connection", (socket) => {
         socket.broadcast.to(data.conversationId).emit("stop_typing", data);
     });
 
-    // 💬 Bericht verzonden
     socket.on("message", (msg) => {
         io.to(msg.conversationId).emit("message", msg);
     });
 
-    // 👥 Gebruiker toegevoegd aan gesprek
     socket.on("user_added", ({ conversationId, user }) => {
         const userName = user?.name || "Onbekende gebruiker";
         console.log(`✅ ${userName} toegevoegd aan gesprek ${conversationId}`);
 
-        // Broadcast systeemmelding
         io.to(conversationId).emit("system_message", {
             conversationId,
             message: `${userName} is toegevoegd aan de chat.`,
             type: "user_added",
         });
 
-        // Eventueel lijst updaten
         io.emit("conversation_update", { conversationId, user });
     });
 
-    // 🚪 Gebruiker heeft gesprek verlaten
     socket.on("user_left", ({ conversationId, user }) => {
         console.log(`🚪 User ${user.name} heeft ${conversationId} verlaten`);
 

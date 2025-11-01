@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 
-// Het volledige type van het bericht (met relaties)
 export type FullMessage = Prisma.MessageGetPayload<{
     include: {
         sender: true;
@@ -11,16 +10,14 @@ export type FullMessage = Prisma.MessageGetPayload<{
     };
 }>;
 
-// Inputdata vanuit de frontend
 export type MessageData = {
     senderId: string;
-    recipientId?: string; // alleen bij eerste bericht in een 1-op-1
-    conversationId?: string; // als het al een bestaande conversatie is
+    recipientId?: string;
+    conversationId?: string;
     content: string;
     type?: "text" | "gif";
 };
 
-// De eigenlijke servicefunctie
 export async function sendMessage({
     senderId,
     recipientId,
@@ -30,7 +27,6 @@ export async function sendMessage({
 }: MessageData): Promise<FullMessage> {
     let convId = conversationId;
 
-    // 🟢 1. Bestaande conversatie zoeken of aanmaken
     if (!convId && recipientId) {
         const existing = await prisma.conversation.findFirst({
             where: {
@@ -62,11 +58,9 @@ export async function sendMessage({
         throw new Error("No conversationId or recipientId provided");
     }
 
-    // 🧠 2. Type automatisch bepalen
     const detectedType =
         type ?? (content.match(/\.gif|tenor\.com/i) ? "gif" : "text");
 
-    // 💾 3. Bericht opslaan in Prisma
     const message = await prisma.message.create({
         data: {
             content,
@@ -89,7 +83,6 @@ export async function sendMessage({
     return message;
 }
 
-// Alle berichten van één conversatie ophalen
 export async function getMessage(conversationId: string) {
     const messages = await prisma.message.findMany({
         where: { conversationId },
